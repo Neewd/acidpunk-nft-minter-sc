@@ -1,0 +1,63 @@
+{
+    "name": "init",
+    "comment": "Verify that the collection ESDT Token is issued",
+    "steps": [
+        {
+            "step": "externalSteps",
+            "path": "00_init.scen.json"
+        },
+        {
+            "step": "setState",
+            "currentBlockInfo": {
+                "blockTimestamp": "100,000"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "1",
+            "comment": "Collection token are issued",
+            "tx": {
+                "from": "address:owner",
+                "to": "sc:acidpunk-nft-minter",
+                "egldValue": "50000000000000000",
+                "function": "issueToken",
+                "arguments": [
+                    "str:ACIDPUNK",
+                    "str:ACD"
+                ],
+                "gasLimit": "100,000,000",
+                "gasPrice": "50,000,000"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "checkState",
+            "accounts": {
+                "sc:acidpunk-nft-minter": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "str:paused": "1",
+                        "str:imageBaseCid": "str:249572874872dqzez",
+                        "str:metadaBaseCid": "str:249572874872dqzez",
+                        "str:royalties": "7000",
+                        "str:nftPrice": "1000000000000000000",
+                        "str:file_extension": "str:.png",
+                        "str:amountOfTokensTotal": "500",
+                        "str:tokensLimitPerAddressTotal": "3",
+                        "str:nftTokenName": "str:ACIDPUNK",
+                        "str:nftTokenName": "str:ACIDPUNK"
+                    },
+                    "code": "file:../output/acidpunk-minter-sc.wasm"
+                },
+                "+": ""
+            }
+        }
+    ]
+}

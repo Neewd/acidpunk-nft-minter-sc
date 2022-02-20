@@ -72,13 +72,17 @@ pub trait AcindPunkMinter {
     #[endpoint(issueToken)]
     fn issue_token(
         &self,
-        #[payment] issue_cost: BigUint,
+        #[payment] payment_amount: BigUint,
         token_name: ManagedBuffer,
         token_ticker: ManagedBuffer,
     ) -> SCResult<AsyncCall> {
         require!(
             self.nft_token_id().is_empty(),
             "Token already issued!"
+        );
+        require!(
+            payment_amount == BigUint::from(50000000000000000u64),
+            "You must pass 0.05 EGLD to pay the collection tiken issuance "
         );
 
         self.nft_token_name().set(&token_name);
@@ -87,7 +91,7 @@ pub trait AcindPunkMinter {
             .send()
             .esdt_system_sc_proxy()
             .issue_non_fungible(
-                issue_cost,
+                payment_amount,
                 &token_name,
                 &token_ticker,
                 NonFungibleTokenProperties {
@@ -413,7 +417,7 @@ pub trait AcindPunkMinter {
     #[storage_mapper("mintedPerAddressTotal")]
     fn minted_per_address_total(&self, address: &ManagedAddress) -> SingleValueMapper<u32>;
 
-    #[storage_mapper("iamgeBaseCid")]
+    #[storage_mapper("imageBaseCid")]
     fn image_base_cid(&self) -> SingleValueMapper<ManagedBuffer>;
 
     #[storage_mapper("metadaBaseCid")]

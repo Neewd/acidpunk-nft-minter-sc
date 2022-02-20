@@ -7,30 +7,39 @@
             "accounts": {
                 "address:owner": {
                     "nonce": "0",
-                    "balance": "10000000000000000000"
+                    "balance": "100,000,000,000,000,000,000,000"
                 },
                 "address:buyer": {
                     "nonce": "0",
-                    "balance": "1000"
+                    "balance": "100,000,000,000,000,000,000"
                 }
             },
             "newAddresses": [
                 {
                     "creatorAddress": "address:owner",
                     "creatorNonce": "0",
-                    "newAddress": "sc:nft-minter"
+                    "newAddress": "sc:acidpunk-nft-minter"
                 }
             ]
         },
         {
             "step": "scDeploy",
-            "txId": "deploy",
+            "txId": "1",
+            "comment": "First deploy",
             "tx": {
                 "from": "address:owner",
                 "contractCode": "file:../output/acidpunk-minter-sc.wasm",
-                "arguments": [],
-                "gasLimit": "10,000,000",
-                "gasPrice": "0"
+                "arguments": [
+                    "str:249572874872dqzez",
+                    "str:249572874872dqzez",
+                    "u32:500",
+                    "u32:3",
+                    "7_000",
+                    "1,000,000,000,000,000,000"
+
+                ],
+                "gasLimit": "50,000,000",
+                "gasPrice": "30,000,000"
             },
             "expect": {
                 "out": [],
@@ -43,35 +52,22 @@
         {
             "step": "checkState",
             "accounts": {
-                "sc:nft-minter": {
+                "sc:acidpunk-nft-minter": {
                     "nonce": "0",
                     "balance": "0",
-                    "storage": {},
+                    "storage": {
+                        "str:paused": "1",
+                        "str:imageBaseCid": "str:249572874872dqzez",
+                        "str:metadaBaseCid": "str:249572874872dqzez",
+                        "str:royalties": "7000",
+                        "str:nftPrice": "1000000000000000000",
+                        "str:file_extension": "str:.png",
+                        "str:amountOfTokensTotal": "500",
+                        "str:tokensLimitPerAddressTotal": "3"
+                    },
                     "code": "file:../output/acidpunk-minter-sc.wasm"
                 },
                 "+": ""
-            }
-        },
-        {
-            "step": "setState",
-            "accounts": {
-                "sc:nft-minter": {
-                    "nonce": "0",
-                    "balance": "0",
-                    "esdt": {
-                        "str:NFT-123456": {
-                            "lastNonce": "0",
-                            "roles": [
-                                "ESDTRoleNFTCreate"
-                            ]
-                        }
-                    },
-                    "storage": {
-                        "str:nftTokenId": "str:NFT-123456"
-                    },
-                    "code": "file:../output/acidpunk-minter-sc.wasm",
-                    "owner": "address:owner"
-                }
             }
         }
     ]
